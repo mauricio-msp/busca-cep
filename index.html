@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <title>Requisição Ajax com jQuery</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <style>
+        .container {
+            margin-top: 130px;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .show {
+            display: block;
+        }
+    </style>
+  </head>
+
+  <body class="bg-light">
+
+    <div class="container">
+      <div class="row justify-content-md-center">  
+        <div class="col-md-8">
+            <h1 class="mb-3 text-center text-success">Busca CEP</h4>
+            <hr class="mb-4">
+
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <label for="cep">CEP</label>
+                    <input type="text" class="form-control" id="cep">
+                </div>
+                <div class="col-md-5 mb-3">
+                    <label for="cidade">Cidade</label>
+                    <input type="text" class="form-control" id="cidade" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="estado">Estado</label>
+                    <input type="text" class="form-control" id="estado" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="endereco">Endereço</label>
+                    <input type="text" class="form-control" id="endereco" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="distrito">Distrito</label>
+                    <input type="text" class="form-control" id="distrito" />
+                </div>
+            </div>
+
+            <hr class="mb-4">
+            <div id="message" class="text-center text-success hide">Aguarde...</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(function(){
+            $(document).ajaxStart(function(){
+                $('#message').show()
+            })
+            
+            $(document).ajaxStop(function(){
+                $('#message').hide()
+            })
+
+            $(document).on('blur', '#cep', function() {
+                let $cep = $('#cep').val()
+               
+                $.ajax({
+                    url: `http://apps.widenet.com.br/busca-cep/api/cep/${$cep}.json`,
+                    dataType: 'json',
+                    success: function(data) {
+                        if(data.status == 1) {
+                            $('input#cidade').val(data.city)
+                            $('input#estado').val(data.state)
+                            $('input#distrito').val(data.district)
+                            $('input#endereco').val(data.address)
+                        }
+                    },
+                    error: function() {
+                        alert('Ocorreu um erro ao carregar os dados.')
+                    }
+                })
+            })
+        })
+    </script>
+  </body>
+</html>
